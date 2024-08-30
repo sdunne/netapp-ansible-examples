@@ -1,0 +1,82 @@
+---
+- name: ONTAP Initial Configuration
+  hosts: localhost
+  gather_facts: false
+
+  module_defaults:
+    group/netapp.ontap.netapp_ontap: '{{ netapp_auth }}'
+
+  vars_files:
+    - vars/netapp-auth.yml
+    - vars/vault.yml
+
+  vars:
+    netapp_cluster_name: cluster01
+    netapp_banner: |
+      Demo NetApp Banner
+      
+      By using this system you consent to monitoring
+    netapp_motd: |
+      Be sure to drink your Ovaltine
+    ntpserver: 72.14.183.39
+
+  tasks:
+    - name: Gather ONTAP facts
+      netapp.ontap.na_ontap_rest_info:
+        gather_subset:
+          - cluster/nodes
+      register: _ontap_facts
+
+    - name: Set cluster nodes fact
+      ansible.builtin.set_fact:
+        _cluster_nodes: '{{ _ontap_facts.ontap_info["cluster/nodes"].records | map(attribute="name") }}'
+
+    - name: Set login banner and MOTD
+      netapp.ontap.na_ontap_login_messages:
+        banner: '{{ netapp_banner }}'
+        motd_message: '{{ netapp_motd }}'
+
+    - name: Add licenses to ONTAP
+      netapp.ontap.na_ontap_license:
+        license_codes: '{{ vault_netapp_license_keys }}'
+        state: present
+
+    - name: Set up NTP
+      netapp.ontap.na_ontap_ntp:
+        server_name: '{{ ntpserver }}'
+        state: present
+
+#    # Executes but the change doesn't seem to occur
+#    - name: Set timezone
+#      netapp.ontap.na_ontap_rest_cli:
+#        command: 'cluster/date'
+#        verb: 'PATCH'
+#        params:
+#          timezone: America/New_York
+
+    # Uses deprecated ZAPI, not idempotent
+    - name: Set timezone
+      netapp.ontap.na_ontap_command:
+        command:
+          - 'cluster'
+          - 'date'
+          - 'modify'
+          - '-timezone'
+          - 'America/New_York'
+
+    - name: Assign all unassigned disks to the first cluster node
+      netapp.ontap.na_ontap_disks:
+        node: '{{ _cluster_nodes | first }}'
+
+    - name: Create NFS aggregate on first cluster node
+      na_ontap_aggregate:
+        name: nfs01
+        state: present
+        nodes: '{{ _cluster_nodes | first }}'
+        disk_count: 16
+        service_state: online
+        wait_for_online: true
+        time_out: 300
+
+
+...

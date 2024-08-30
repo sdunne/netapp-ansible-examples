@@ -1,0 +1,28 @@
+---
+- name: Gather ONTAP facts
+  hosts: localhost
+  gather_facts: false
+
+  module_defaults:
+    group/netapp.ontap.netapp_ontap: '{{ netapp_auth }}'
+
+  vars_files:
+    - vars/netapp-auth.yml
+    - vars/vault.yml
+
+  tasks:
+    - name: Get ONTAP cluster node info
+      netapp.ontap.na_ontap_rest_info:
+        gather_subset:
+          - cluster/nodes
+          - license_info
+          - disk_info
+          - aggregate_info
+      register: _ontap_rest_info
+
+    - name: Display ONTAP facts
+      ansible.builtin.debug:
+        var: _ontap_rest_info.ontap_info
+        
+
+...

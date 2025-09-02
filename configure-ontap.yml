@@ -12,13 +12,15 @@
 
   vars:
     netapp_cluster_name: cluster01
+#    netapp_banner: ""
     netapp_banner: |
       Demo NetApp Banner
       
       By using this system you consent to monitoring
     netapp_motd: |
       Be sure to drink your Ovaltine
-    ntpserver: 72.14.183.39
+#    netapp_motd: ""
+    ntpserver: 10.2.32.37
 
   tasks:
     - name: Gather ONTAP facts
@@ -36,10 +38,10 @@
         banner: '{{ netapp_banner }}'
         motd_message: '{{ netapp_motd }}'
 
-    - name: Add licenses to ONTAP
-      netapp.ontap.na_ontap_license:
-        license_codes: '{{ vault_netapp_license_keys }}'
-        state: present
+#    - name: Add licenses to ONTAP
+#      netapp.ontap.na_ontap_license:
+#        license_codes: '{{ vault_netapp_license_keys }}'
+#        state: present
 
     - name: Set up NTP
       netapp.ontap.na_ontap_ntp:
@@ -55,28 +57,28 @@
 #          timezone: America/New_York
 
     # Uses deprecated ZAPI, not idempotent
-    - name: Set timezone
-      netapp.ontap.na_ontap_command:
-        command:
-          - 'cluster'
-          - 'date'
-          - 'modify'
-          - '-timezone'
-          - 'America/New_York'
+#    - name: Set timezone
+#      netapp.ontap.na_ontap_command:
+#        command:
+#          - 'cluster'
+#          - 'date'
+#          - 'modify'
+#          - '-timezone'
+#          - 'America/New_York'
 
-    - name: Assign all unassigned disks to the first cluster node
-      netapp.ontap.na_ontap_disks:
-        node: '{{ _cluster_nodes | first }}'
-
-    - name: Create NFS aggregate on first cluster node
-      na_ontap_aggregate:
-        name: nfs01
-        state: present
-        nodes: '{{ _cluster_nodes | first }}'
-        disk_count: 16
-        service_state: online
-        wait_for_online: true
-        time_out: 300
+#    - name: Assign all unassigned disks to the first cluster node
+#      netapp.ontap.na_ontap_disks:
+#        node: '{{ _cluster_nodes | first }}'
+#
+#    - name: Create NFS aggregate on first cluster node
+#      na_ontap_aggregate:
+#        name: nfs01
+#        state: present
+#        nodes: '{{ _cluster_nodes | first }}'
+#        disk_count: 16
+#        service_state: online
+#        wait_for_online: true
+#        time_out: 300
 
 
 ...

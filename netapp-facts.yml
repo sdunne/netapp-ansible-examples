@@ -5,6 +5,13 @@
 
 #  module_defaults:
 #    group/netapp.ontap.netapp_ontap: '{{ netapp_auth }}'
+  module_defaults:
+    group/netapp.ontap.netapp_ontap: 
+      hostname: "{{ hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      https: true
+      validate_certs: false
 
 #  vars_files:
 #    - vars/netapp-auth.yml

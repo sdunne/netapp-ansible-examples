@@ -3,12 +3,12 @@
   hosts: localhost
   gather_facts: false
 
-  module_defaults:
-    group/netapp.ontap.netapp_ontap: '{{ netapp_auth }}'
+#  module_defaults:
+#    group/netapp.ontap.netapp_ontap: '{{ netapp_auth }}'
 
-  vars_files:
-    - vars/netapp-auth.yml
-    - vars/vault.yml
+#  vars_files:
+#    - vars/netapp-auth.yml
+#    - vars/vault.yml
 
   tasks:
     - name: Get ONTAP cluster node info

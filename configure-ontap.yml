@@ -20,14 +20,13 @@
 
   vars:
     netapp_cluster_name: cluster01
-#    netapp_banner: ""
     netapp_banner: |
       Demo NetApp Banner
       
       By using this system you consent to monitoring
     netapp_motd: |
       Be sure to drink your Ovaltine
-#    netapp_motd: ""
+    netapp_motd: ""
     ntpserver: clock.corp.redhat.com
 
   tasks:
@@ -37,13 +36,13 @@
           - cluster/nodes
       register: _ontap_facts
 
-#    - name: Set cluster nodes fact
-#      ansible.builtin.set_fact:
-#        _cluster_nodes: '{{ _ontap_facts.ontap_info["cluster/nodes"].records | map(attribute="name") }}'
-#
-#    - name: Show fact _cluster_nodes
-#      ansible.builtin.debug:
-#        var: _cluster_nodes
+    - name: Set cluster nodes fact
+      ansible.builtin.set_fact:
+        _cluster_nodes: '{{ _ontap_facts.ontap_info["cluster/nodes"].records | map(attribute="name") }}'
+
+    - name: Show fact _cluster_nodes
+      ansible.builtin.debug:
+        var: _cluster_nodes
 
     - name: Set login banner and MOTD
       netapp.ontap.na_ontap_login_messages:

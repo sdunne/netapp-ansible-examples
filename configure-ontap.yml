@@ -66,7 +66,7 @@
       ansible.builtin.debug:
         msg: |
           "The current ntp settings are as follows:
-          {{ _ntp_settings['records']['servers'] }}"
+          {{ _ntp_settings }}"
 
 #    - name: Run ontap command to show NTP servers
 

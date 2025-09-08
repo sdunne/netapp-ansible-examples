@@ -56,6 +56,18 @@
         server_name: '{{ ntpserver }}'
         state: present
 
+    - name: Run ontap command to show NTP servers
+      netapp.ontap.na_ontap_command:
+        #command: ['node', 'show', '-fields', 'node,health,uptime,model']
+        command: ['cluster', 'time-service', 'ntp', 'server', 'show']
+      register: ntp_command_output
+
+    - name: Display ntp command output
+      ansible.builtin.debug:
+        msg: |
+          "The current NTP info is as follows:
+          {{ ntp_command_output }}"
+
 #    # Executes but the change doesn't seem to occur
 #    - name: Set timezone
 #      netapp.ontap.na_ontap_rest_cli:

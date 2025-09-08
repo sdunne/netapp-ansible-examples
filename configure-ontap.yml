@@ -3,12 +3,20 @@
   hosts: localhost
   gather_facts: false
 
-  module_defaults:
-    group/netapp.ontap.netapp_ontap: '{{ netapp_auth }}'
+#  module_defaults: # disable section for AAP use
+#    group/netapp.ontap.netapp_ontap: '{{ netapp_auth }}'
 
-  vars_files:
-    - vars/netapp-auth.yml
-    - vars/vault.yml
+  module_defaults: # enable for AAP use
+    group/netapp.ontap.netapp_ontap:
+      hostname: "{{ hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      https: true
+      validate_certs: false
+
+#  vars_files: # disable section for AAP use
+#    - vars/netapp-auth.yml
+#    - vars/vault.yml
 
   vars:
     netapp_cluster_name: cluster01

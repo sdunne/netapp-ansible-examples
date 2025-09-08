@@ -56,6 +56,18 @@
         server_name: '{{ ntpserver }}'
         state: present
 
+    - name: Gather current ntp server settings
+      netapp.ontap.na_ontap_rest_info:
+        gather_subset:
+          - ntp_server_info
+      register: _ntp_settings
+
+    - name: Display current ntp server settings
+      ansible.builtin.debug:
+        msg: |
+          "The current ntp settings are as follows:
+          {{ _ntp_settings['records']['servers'] }}"
+
 #    - name: Run ontap command to show NTP servers
 
 #    # Executes but the change doesn't seem to occur

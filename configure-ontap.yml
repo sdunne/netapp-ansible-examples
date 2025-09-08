@@ -28,7 +28,7 @@
     netapp_motd: |
       Be sure to drink your Ovaltine
 #    netapp_motd: ""
-    ntpserver: 10.2.32.37
+    ntpserver: clock.corp.redhat.com
 
   tasks:
     - name: Gather ONTAP facts
@@ -54,7 +54,7 @@
     - name: Set up NTP
       netapp.ontap.na_ontap_ntp:
         server_name: '{{ ntpserver }}'
-        state: present
+        state: absent
 
     - name: Gather current ntp server settings
       netapp.ontap.na_ontap_rest_info:

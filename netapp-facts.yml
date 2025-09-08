@@ -20,7 +20,8 @@
   tasks:
     - name: Get ONTAP cluster node info
       netapp.ontap.na_ontap_rest_info:
-#        gather_subset:
+        gather_subset:
+          - ntp_server_info
 #          - cluster/nodes
 #          - license_info
 #          - disk_info

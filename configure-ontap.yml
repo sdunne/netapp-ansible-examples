@@ -54,7 +54,7 @@
     - name: Set up NTP
       netapp.ontap.na_ontap_ntp:
         server_name: '{{ ntpserver }}'
-        state: absent
+        state: present
 
     - name: Gather current ntp server settings
       netapp.ontap.na_ontap_rest_info:

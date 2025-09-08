@@ -64,7 +64,7 @@
 
     - name: Display current ntp server settings
       ansible.builtin.debug:
-        var: _ontap_rest_info.['ontap_info']['cluster/ntp/servers']['records']['server']
+        var: _ontap_rest_info['ontap_info']['cluster/ntp/servers']['records']['server']
 #        msg: |
 #          "The current ntp settings are as follows:
 #          {{ _ntp_settings['ontap_info']['cluster/ntp/servers']['records']['server'] }}"
